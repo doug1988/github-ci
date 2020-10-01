@@ -1,0 +1,13 @@
+images:
+  terraform: dnxsolutions/terraform:0.13.0-dnx1
+  gsuite: dnxsolutions/aws-google-auth:latest
+  azure: dnxsolutions/docker-aws-azure-ad:latest
+workspaces:
+  labs2:
+    aws-account-id: "158947203889"
+    aws-role: dnx-labs2-admin
+    account_name: "labs2"
+    cluster_name: "openvpn"
+    domain_name: "openvpn.labs2.dnx.host"
+    hosted_zone: "labs2.dnx.host"
+    route_push: "10.37.0.0 255.255.0.0,10.47.0.0 255.255.0.0,10.57.0.0 255.255.0.0"

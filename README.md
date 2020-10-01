@@ -1,68 +1,119 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# OpenVPN
 
-## Available Scripts
+## Resources
 
-In the project directory, you can run:
+- Public Docker image with openvpn and scripts
+- Task definition sets public ip for network interface
+- As container starts
+  - it updates DNS to point to its public ip
 
-### `yarn start`
+## Workspaces
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- shared-ap-southeast-2-default
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+# Description openvpn stack deploy
+- How to set up the openvpn stack  unsig make file.
 
-### `yarn test`
+## if is there env files - clean existing files
+- rm -r .env .env.auth
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# workspaces
+- before execute the stack is necessary to set the correct workspace for each environment
+1. shared-services: `export WORKSPACE=shared-ap-southeast-2-default`
 
-### `yarn build`
+## Executing open vpnstack
+- once the correct workspace has been set up, execute the following process:
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 1. Google Authentication
+- make google-auth
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+## 2. Assume role
+- make dnx-assume
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 3. terraform init
+- make init
 
-### `yarn eject`
+## 4. terraform plan
+- make plan
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## 5. terraform apply
+- make apply
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+# Usage
 
-### Code Splitting
+## Adding Users
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+1. Login to AWS Console
+2. Switch to Shared Services account
+3. Change to the region that OpenVPN is deployed
+4. Go to Services -> Systems Manager -> Parameter Store
+5. Find a parameter named `/openvpn-shared-services/USERS` click Edit
+6. Add users separated by comma, as in example below:
 
-### Analyzing the Bundle Size
+Example:
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+```
+allan,helder,claison,woltter
+```
 
-### Making a Progressive Web App
+For DNX users, add `dnx-` prefix to avoid confusion with client's users.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+**Do not remove users from the list, there's a revoking process described below.**
 
-### Advanced Configuration
+Commit the code and apply the changes in the pipeline.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+## Revoking Users
 
-### Deployment
+There's no way to remove an user, since it's key already been signed by the OpenVPN certificate.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+Instead, we have to revoke users.
 
-### `yarn build` fails to minify
+To revoke, follow the steps:
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+1. Login to AWS Console
+2. Switch to Shared Services account
+3. Change to the region that OpenVPN is deployed
+4. Go to Services -> Systems Manager -> Parameter Store
+5. Find a parameter named `/openvpn-shared-services/REVOKE_USERS` click Edit
+6. Add users separated by comma, as in example below:
+
+```
+"allan,claison"
+```
+
+Use the exact same name that is on `USERS` parameter. **There's no need to remove the revoked users from `USERS` parameter.**
+
+## Applying Changes
+
+After changing USERS or REVOKE_USERS parameter, wait for a few minutes and the OpenVPN container will automatically pick up and perform the changes.
+
+You can follow the process by reading the logs at Cloudwatch Logs.
+
+## OpenVPN Logs (debugging issues)
+
+To view container logs, follow the steps below:
+
+1. Login to AWS Console
+2. Switch to Shared Services account
+3. Change to the region that OpenVPN is deployed
+4. Go to Cloudwatch and select Log Groups under Logs
+5. Find a Log Group called `ecs-openvpn-shared-services` and click on it
+6. Click "Search log group" at the top right corner
+
+## Downloading OVPN files
+
+When a user is added, OpenVPN copies a .ovpn file to an S3 bucket in the same account. This file needs to be sent to the user so he/she can connect to the VPN.
+
+1. Login to AWS Console
+2. Switch to Shared Services account
+3. Go to S3
+4. Find a bucket called `openvpn-shared-services-<a long number>`
+5. Click on the bucket
+6. Download the .opvn files as needed
+
+**It's important that .ovpn files are not shared between users. Sharing will cause connections to be dropped as one user can maintain only one connection at a time.**

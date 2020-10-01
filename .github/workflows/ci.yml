@@ -29,6 +29,8 @@ jobs:
       run: |
         export AWS_ROLE=dnx-labs2-admin
         export AWS_ACCOUNT_ID=158947203889
+        export WORKSPACE=shared-ap-southeast-2-default
         env | grep AWS
         aws s3 ls
         cat simple_file.txt
+        make init_ci
