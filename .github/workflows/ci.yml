@@ -31,3 +31,4 @@ jobs:
         export AWS_ACCOUNT_ID=158947203889
         env | grep AWS
         aws s3 ls
+        cat simple_file.txt
