@@ -10,13 +10,7 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Run a one-line script
-      run: echo Hello, world!
-    - name: Run a multi-line script
-      run: |
-        echo Add other actions to build,
-        echo test, and deploy your project.
-        pwd
-        docker --version
+      run: Create GitHub Pipeline!
 
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
@@ -30,7 +24,4 @@ jobs:
         export AWS_ROLE=dnx-labs2-admin
         export AWS_ACCOUNT_ID=158947203889
         export WORKSPACE=labs2
-        env | grep AWS
-        aws s3 ls
-        cat simple_file.txt
         make init_ci
