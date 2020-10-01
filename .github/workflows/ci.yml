@@ -27,7 +27,7 @@ jobs:
 
     - name: Copy files to the test website with the AWS CLI
       run: |
-        export export AWS_ACCOUNT_ID=158947203889
+        export AWS_ACCOUNT_ID=158947203889
         export AWS_ROLE=dnx-labs2-admin
         env | grep AWS
         aws s3 ls
