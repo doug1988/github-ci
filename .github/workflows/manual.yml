@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       action:
-        description: list s3
+        description: Choose your environment (all, prod, dev, shared)
         default: dev
         required: true
 jobs:
@@ -27,8 +27,8 @@ jobs:
           export AWS_ROLE=dnx-labs2-admin
           export AWS_ACCOUNT_ID=158947203889
           export WORKSPACE=labs2-PROD
-          env | grep WORK
           aws s3 ls
+          env | grep WORK
 
       - name: Execute ls
         if: github.event.inputs.action == 'dev' || github.event.inputs.action == 'all'
@@ -36,6 +36,16 @@ jobs:
           export AWS_ROLE=dnx-labs2-admin
           export AWS_ACCOUNT_ID=158947203889
           export WORKSPACE=labs2-DEV
+          ls -lha
+          env | grep WORKSPACE
+          env | grep AWS
+
+      - name: Execute ls
+        if: github.event.inputs.action == 'shared' || github.event.inputs.action == 'all'
+        run: |
+          export AWS_ROLE=dnx-labs2-admin
+          export AWS_ACCOUNT_ID=158947203889
+          export WORKSPACE=labs2-Shared
           ls -lha
           env | grep WORKSPACE
           env | grep AWS
