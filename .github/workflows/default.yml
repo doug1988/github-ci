@@ -10,7 +10,7 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Run a one-line script
-      run: Create GitHub Pipeline!
+      run: echo Create GitHub Pipeline!
 
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
