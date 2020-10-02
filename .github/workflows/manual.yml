@@ -36,5 +36,6 @@ jobs:
           export AWS_ROLE=dnx-labs2-admin
           export AWS_ACCOUNT_ID=158947203889
           export WORKSPACE=labs2-DEV
-          env | grep WORK
           ls -lha
+          env | grep WORKSPACE
+          env | grep AWS
