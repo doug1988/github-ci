@@ -4,7 +4,7 @@ on:
     inputs:
       action:
         description: list s3
-        default: ls
+        default: prod
         required: true
 jobs:
   deploy:
@@ -22,9 +22,17 @@ jobs:
           aws-region: ap-southeast-2
 
       - name: Execute list S3
+        if: github.event.inputs.action == 'prod'
         run: |
           export AWS_ROLE=dnx-labs2-admin
           export AWS_ACCOUNT_ID=158947203889
           export WORKSPACE=labs2
-          aws s3 ${{ github.event.inputs.action }}
-          cat simple_file.txt
+          aws s3 ls
+
+      - name: Execute ls
+        if: github.event.inputs.action == 'dev'
+        run: |
+          export AWS_ROLE=dnx-labs2-admin
+          export AWS_ACCOUNT_ID=158947203889
+          export WORKSPACE=labs2
+          ls -lha
