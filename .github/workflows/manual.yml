@@ -22,21 +22,17 @@ jobs:
           aws-region: ap-southeast-2
 
       - name: Execute list S3
-        if: github.event.inputs.action == 'prod'
-        env:
-          WORKSPACE: ${{ secrets.WORKSPACE_PROD}}
+        if: github.event.inputs.action == 'prod' or github.event.inputs.action == 'all'
         run: |
           export AWS_ROLE=dnx-labs2-admin
           export AWS_ACCOUNT_ID=158947203889
-          env | grep WORK
+          export WORKSPACE=labs2
           aws s3 ls
 
       - name: Execute ls
-        if: github.event.inputs.action == 'dev'
-        env:
-          WORKSPACE: ${{secrets.WORKSPACE_DEV}}
+        if: github.event.inputs.action == 'dev' or github.event.inputs.action == 'all'
         run: |
           export AWS_ROLE=dnx-labs2-admin
           export AWS_ACCOUNT_ID=158947203889
-          env | grep WORK
+          export WORKSPACE=labs2
           ls -lha
