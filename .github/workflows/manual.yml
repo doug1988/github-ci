@@ -8,7 +8,7 @@ on:
         required: true
 jobs:
   deploy:
-    name: Deploy To Production
+    name: CI/CD Company Name - GitHub
     runs-on: ubuntu-latest
     steps:
       - name: Execute in Production
@@ -21,7 +21,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.TEST_AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-southeast-2
 
-      - name: Execute list S3
+      - name: Execute Production Environment
         if: github.event.inputs.action == 'prod' || github.event.inputs.action == 'all'
         run: |
           export AWS_ROLE=dnx-labs2-admin
@@ -30,7 +30,7 @@ jobs:
           aws s3 ls
           env | grep WORK
 
-      - name: Execute ls
+      - name: Execute DEV  Environment
         if: github.event.inputs.action == 'dev' || github.event.inputs.action == 'all'
         run: |
           export AWS_ROLE=dnx-labs2-admin
@@ -40,12 +40,12 @@ jobs:
           env | grep WORKSPACE
           env | grep AWS
 
-      - name: Execute ls
+      - name: Execute Shared Environment
         if: github.event.inputs.action == 'shared' || github.event.inputs.action == 'all'
         run: |
           export AWS_ROLE=dnx-labs2-admin
           export AWS_ACCOUNT_ID=158947203889
           export WORKSPACE=labs2-Shared
-          ls -lha
+          cat simple_file.txt
           env | grep WORKSPACE
           env | grep AWS
