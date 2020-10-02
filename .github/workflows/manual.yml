@@ -22,7 +22,7 @@ jobs:
           aws-region: ap-southeast-2
 
       - name: Execute list S3
-        if: github.event.inputs.action == 'prod' or github.event.inputs.action == 'all'
+        if: github.event.inputs.action == 'prod' || github.event.inputs.action == 'all'
         run: |
           export AWS_ROLE=dnx-labs2-admin
           export AWS_ACCOUNT_ID=158947203889
@@ -30,7 +30,7 @@ jobs:
           aws s3 ls
 
       - name: Execute ls
-        if: github.event.inputs.action == 'dev' or github.event.inputs.action == 'all'
+        if: github.event.inputs.action == 'dev' || github.event.inputs.action == 'all'
         run: |
           export AWS_ROLE=dnx-labs2-admin
           export AWS_ACCOUNT_ID=158947203889
