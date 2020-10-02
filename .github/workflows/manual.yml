@@ -23,16 +23,20 @@ jobs:
 
       - name: Execute list S3
         if: github.event.inputs.action == 'prod'
+        env:
+          WORKSPACE: ${{ secrets.WORKSPACE_PROD}}
         run: |
           export AWS_ROLE=dnx-labs2-admin
           export AWS_ACCOUNT_ID=158947203889
-          export WORKSPACE=labs2
+          env | grep WORK
           aws s3 ls
 
       - name: Execute ls
         if: github.event.inputs.action == 'dev'
+        env:
+          WORKSPACE: ${{secrets.WORKSPACE_DEV}}
         run: |
           export AWS_ROLE=dnx-labs2-admin
           export AWS_ACCOUNT_ID=158947203889
-          export WORKSPACE=labs2
+          env | grep WORK
           ls -lha
