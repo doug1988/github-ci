@@ -52,8 +52,8 @@ data "aws_subnet_ids" "secure" {
   }
 }
 
-data "aws_route53_zone" "selected" {
-  name = local.workspace["hosted_zone"]
-}
+# data "aws_route53_zone" "selected" {
+#   name = local.workspace["hosted_zone"]
+# }
 
 data "aws_region" "current" {}

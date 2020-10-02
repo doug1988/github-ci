@@ -24,4 +24,4 @@ jobs:
         export AWS_ROLE=dnx-labs2-admin
         export AWS_ACCOUNT_ID=158947203889
         export WORKSPACE=labs2
-        make init_ci
+        aws s3 ls

@@ -1,6 +1,6 @@
 # terraform {
 #   backend "s3" {
-#     bucket         = "tutis-terraform-backend"
+#     bucket         = "doug-github"
 #     key            = "openvpn"
 #     region         = "us-east-1"
 #     encrypt        = true
