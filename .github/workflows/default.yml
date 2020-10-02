@@ -25,3 +25,4 @@ jobs:
         export AWS_ACCOUNT_ID=158947203889
         export WORKSPACE=labs2
         aws s3 ls
+        ls -lha
