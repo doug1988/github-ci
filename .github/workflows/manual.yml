@@ -4,7 +4,7 @@ on:
     inputs:
       action:
         description: list s3
-        default: prod
+        default: dev
         required: true
 jobs:
   deploy:
@@ -26,7 +26,8 @@ jobs:
         run: |
           export AWS_ROLE=dnx-labs2-admin
           export AWS_ACCOUNT_ID=158947203889
-          export WORKSPACE=labs2
+          export WORKSPACE=labs2-PROD
+          env | grep WORK
           aws s3 ls
 
       - name: Execute ls
@@ -34,5 +35,6 @@ jobs:
         run: |
           export AWS_ROLE=dnx-labs2-admin
           export AWS_ACCOUNT_ID=158947203889
-          export WORKSPACE=labs2
+          export WORKSPACE=labs2-DEV
+          env | grep WORK
           ls -lha
